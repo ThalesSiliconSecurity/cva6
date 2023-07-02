@@ -148,7 +148,7 @@ module wt_cache_subsystem import ariane_pkg::*; import wt_cache_pkg::*; #(
     .dcache_rtrn_vld_o  ( adapter_dcache_rtrn_vld ),
     .dcache_rtrn_o      ( adapter_dcache          ),
     .l15_req_o          ( noc_req_o               ),
-    .l15_rtrn_i         ( noc_rtrn_i              )
+    .l15_rtrn_i         ( noc_resp_i              )
   );
 `else
   wt_axi_adapter #(
