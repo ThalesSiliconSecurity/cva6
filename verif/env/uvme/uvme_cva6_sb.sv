@@ -240,12 +240,18 @@ function void uvme_cva6_sb_c::check_pc_trap(uvma_isacov_instr_c instr,
   if (instr_prev != null) begin
      if (instr_prev.trap) begin
         if (mtvec_change) begin
-           if (instr.rvfi.pc_rdata[31:2] == mtvec_value[31:2]) begin
-              //we only support MTVEC Direct mode
-              `uvm_info(get_type_name(), $sformatf("After a trap, PC matches MTVEC value"), UVM_DEBUG)
+           if(cfg.xlen == 32) begin
+              if (instr.rvfi.pc_rdata[31:2] == mtvec_value[31:2]) begin
+                 //we only support MTVEC Direct mode
+                 `uvm_info(get_type_name(), $sformatf("After a trap, PC matches MTVEC value"), UVM_DEBUG)
+              end
+              else begin
+                 `uvm_fatal(get_type_name(), "ERROR -> Doesn't jump to MTVEC")
+              end
            end
            else begin
-              `uvm_fatal(get_type_name(), "ERROR -> Doesn't jump to MTVEC")
+              //TODO add 64 bit configuration support
+              `uvm_info(get_type_name(), $sformatf("We only support 32 bit configuration"), UVM_DEBUG)
            end
         end
         else begin
@@ -347,7 +353,7 @@ function bit [XLEN:0] uvme_cva6_sb_c::check_mcycle_h(uvma_isacov_instr_c instr, 
          overflow = 1;
       end
       else begin
-         `uvm_error(get_type_name(), $sformatf("ERROR : No overflow - MCYCLE isn't incremented"))
+         `uvm_error(get_type_name(), $sformatf("ERROR : No overflow - MCYCLE isn't incremented, %d - %d", mcycle_read, mcycle_prev))
          overflow = 0;
       end
    end
@@ -478,7 +484,9 @@ task uvme_cva6_sb_c::run_phase(uvm_phase phase);
               instr_trn_fifo.get(instr_trn);
               check_pc_trap(instr_trn.instr, instr_prev);
               check_mepc(instr_trn.instr);
-              mcycle_update = check_mcycle_h(instr_trn.instr, instr_prev, read_cycle);
+              if (instr_trn.instr.rvfi.nret_id == 0) begin
+                 mcycle_update = check_mcycle_h(instr_trn.instr, instr_prev, read_cycle);
+              end
               // Move instructions down the pipeline
               instr_prev = instr_trn.instr;
           end    
