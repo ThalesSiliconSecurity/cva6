@@ -72,7 +72,7 @@ module cva6_te_connector #(
   // entries for the FIFOs
   uop_entry_t [CVA6Cfg.NrCommitPorts-1:0] uop_entry_i, uop_entry_o;
   uop_entry_t uop_entry_mux;
-  logic [CVA6Cfg.NrCommitPorts][connector_pkg::ITYPE_LEN-1:0] itype;
+  logic [CVA6Cfg.NrCommitPorts-1:0][connector_pkg::ITYPE_LEN-1:0] itype;
   // FIFOs management
   logic pop[CVA6Cfg.NrCommitPorts-1:0];  // signal to pop FIFOs
   logic empty[CVA6Cfg.NrCommitPorts-1:0];  // signal used to enable counter
