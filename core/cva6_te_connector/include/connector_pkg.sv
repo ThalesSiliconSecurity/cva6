@@ -18,9 +18,9 @@
 
 package connector_pkg;
   // These parameters could be used in the ENCODER stage
-  localparam CAUSE_LEN = 5; //Size is ecause_width_p in the E-Trace SPEC
-  localparam ITYPE_LEN = 3; //Size is itype_width_p in the E-Trace SPEC (3 or 4)
-  localparam IRETIRE_LEN = 32; //Size is iretire_width_p in the E-Trace SPEC
+  localparam CAUSE_LEN = 5;  //Size is ecause_width_p in the E-Trace SPEC
+  localparam ITYPE_LEN = 3;  //Size is itype_width_p in the E-Trace SPEC (3 or 4)
+  localparam IRETIRE_LEN = 32;  //Size is iretire_width_p in the E-Trace SPEC
   //localparam TIME_LEN = 64; //rvfi_csr used logic [63:0] cycle_q but TIME_LEN could be used in the ENCODER stage
 
   // struct to save all itypes

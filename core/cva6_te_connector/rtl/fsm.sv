@@ -21,28 +21,26 @@
 it determines the iaddr, ilastsize, iretire
 */
 
-module fsm
-#(
+module fsm #(
     parameter config_pkg::cva6_cfg_t CVA6Cfg = config_pkg::cva6_cfg_empty,
     parameter type uop_entry_t = logic
-)(
+) (
     input logic clk_i,
     input logic rst_ni,
 
     input uop_entry_t                                uop_entry_i,
-    input logic                      [connector_pkg::CAUSE_LEN-1:0] cause_i,
-    input logic                      [    CVA6Cfg.XLEN-1:0] tval_i,
+    input logic       [connector_pkg::CAUSE_LEN-1:0] cause_i,
+    input logic       [            CVA6Cfg.XLEN-1:0] tval_i,
 
-    output logic                                  valid_o,
-    output logic [connector_pkg::IRETIRE_LEN-1:0] iretire_o,
-    output logic                                  ilastsize_o,
-    output logic [  connector_pkg::ITYPE_LEN-1:0] itype_o,
-    output logic [  connector_pkg::CAUSE_LEN-1:0] cause_o,
-    output logic [       CVA6Cfg.XLEN-1:0] tval_o,
-    output riscv::priv_lvl_t  priv_o,
-    output logic [       CVA6Cfg.XLEN-1:0] iaddr_o
+    output logic                                              valid_o,
+    output logic             [connector_pkg::IRETIRE_LEN-1:0] iretire_o,
+    output logic                                              ilastsize_o,
+    output logic             [  connector_pkg::ITYPE_LEN-1:0] itype_o,
+    output logic             [  connector_pkg::CAUSE_LEN-1:0] cause_o,
+    output logic             [              CVA6Cfg.XLEN-1:0] tval_o,
+    output riscv::priv_lvl_t                                  priv_o,
+    output logic             [              CVA6Cfg.XLEN-1:0] iaddr_o
 );
-  /*states definition for FSM */
   typedef enum logic {
     IDLE  = 0,
     COUNT = 1

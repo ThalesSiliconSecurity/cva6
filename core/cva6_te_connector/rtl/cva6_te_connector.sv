@@ -54,7 +54,7 @@ module cva6_te_connector #(
     output logic [N-1:0][connector_pkg::ITYPE_LEN-1:0] itype_o,
     output logic [connector_pkg::CAUSE_LEN-1:0] cause_o,
     output logic [CVA6Cfg.XLEN-1:0] tval_o,
-    output riscv::priv_lvl_t  priv_o,
+    output riscv::priv_lvl_t priv_o,
     output logic [N-1:0][CVA6Cfg.XLEN-1:0] iaddr_o,
     //output logic [connector_pkg::CTX_LEN-1:0]               context_o, // non mandatory
     output logic [63:0] time_o  // non mandatory
@@ -63,16 +63,16 @@ module cva6_te_connector #(
 );
   // struct to store data inside the uop FIFO
   localparam type uop_entry_t = struct packed {
-    logic                 valid;
-    logic [CVA6Cfg.XLEN-1:0]      pc;
+    logic                                valid;
+    logic [CVA6Cfg.XLEN-1:0]             pc;
     logic [connector_pkg::ITYPE_LEN-1:0] itype;       // determined in itype detector
-    logic                 compressed;
-    riscv::priv_lvl_t priv;
+    logic                                compressed;
+    riscv::priv_lvl_t                    priv;
   };
   // entries for the FIFOs
-  uop_entry_t uop_entry_i[CVA6Cfg.NrCommitPorts-1:0], uop_entry_o[CVA6Cfg.NrCommitPorts-1:0];
+  uop_entry_t [CVA6Cfg.NrCommitPorts-1:0] uop_entry_i, uop_entry_o;
   uop_entry_t uop_entry_mux;
-  logic [connector_pkg::ITYPE_LEN-1:0] itype[CVA6Cfg.NrCommitPorts];
+  logic [CVA6Cfg.NrCommitPorts][connector_pkg::ITYPE_LEN-1:0] itype;
   // FIFOs management
   logic pop[CVA6Cfg.NrCommitPorts-1:0];  // signal to pop FIFOs
   logic empty[CVA6Cfg.NrCommitPorts-1:0];  // signal used to enable counter
@@ -95,11 +95,11 @@ module cva6_te_connector #(
   logic [$clog2(N):0] n_blocks_i, n_blocks_o;
   logic n_blocks_push;
   logic n_blocks_pop;
-    // struct to store exc and int infos
+  // struct to store exc and int infos
   localparam type exc_info_t = struct packed {
     logic [connector_pkg::CAUSE_LEN-1:0] cause;
     logic [CVA6Cfg.XLEN-1:0] tval;
-  } ;
+  };
   // exception signals
   exc_info_t exc_info_i, exc_info_o;
   logic                                                                  exc_info_full;
@@ -111,15 +111,15 @@ module cva6_te_connector #(
   logic [                         N-1:0]                                 ilastsize_q;
   logic [                         N-1:0][  connector_pkg::ITYPE_LEN-1:0] itype_q;
   logic [  connector_pkg::CAUSE_LEN-1:0]                                 cause_q;
-  logic [       CVA6Cfg.XLEN-1:0]                                 tval_q;
-  logic [                         N-1:0][       CVA6Cfg.XLEN-1:0] iaddr_q;
+  logic [              CVA6Cfg.XLEN-1:0]                                 tval_q;
+  logic [                         N-1:0][              CVA6Cfg.XLEN-1:0] iaddr_q;
 
   logic [connector_pkg::IRETIRE_LEN-1:0]                                 iretire_d;
   logic                                                                  ilastsize_d;
   logic [  connector_pkg::ITYPE_LEN-1:0]                                 itype_d;
   logic [  connector_pkg::CAUSE_LEN-1:0]                                 cause_d;
-  logic [       CVA6Cfg.XLEN-1:0]                                 tval_d;
-  logic [       CVA6Cfg.XLEN-1:0]                                 iaddr_d;
+  logic [              CVA6Cfg.XLEN-1:0]                                 tval_d;
+  logic [              CVA6Cfg.XLEN-1:0]                                 iaddr_d;
 
   // assignments
   assign pop[0] =    (mux_arb_val == 0 ||
@@ -217,7 +217,7 @@ module cva6_te_connector #(
 
   // mux arbiter for serialization
   counter #(
-      .WIDTH($clog2(CVA6Cfg.NrCommitPorts)), //MC: Mentionned $clog2(NRET-1) in arch description but why?
+      .WIDTH($clog2(CVA6Cfg.NrCommitPorts)),
       .STICKY_OVERFLOW('0)
   ) i_mux_arbiter (  // change name?
       .clk_i     (clk_i),
@@ -253,7 +253,7 @@ module cva6_te_connector #(
 
   // demux arbiter to choose register
   counter #(
-      .WIDTH($clog2(N) + 1), //MC: again why $clog2(N)+1 here and not $clog2(N-1) or $clog2(N) as description suggested?
+      .WIDTH($clog2(N) + 1), 
       .STICKY_OVERFLOW('0)
   ) i_demux_arbiter (
       .clk_i     (clk_i),
