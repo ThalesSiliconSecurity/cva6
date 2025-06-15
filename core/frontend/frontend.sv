@@ -540,6 +540,7 @@ module frontend
     ypb_a_state_q == TRANSPARENT ? paddr[CVA6Cfg.PLEN-1:CVA6Cfg.FETCH_ALIGN_BITS] : paddr_q[CVA6Cfg.PLEN-1:CVA6Cfg.FETCH_ALIGN_BITS],
     {CVA6Cfg.FETCH_ALIGN_BITS{1'b0}}
   };
+  assign ypb_fetch_req_o.size = CVA6Cfg.FETCH_ALIGN_BITS;
   assign ypb_fetch_req_o.we = '0;
   assign ypb_fetch_req_o.be = '1;
   assign ypb_fetch_req_o.wdata = '0;
